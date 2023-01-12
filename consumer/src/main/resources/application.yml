@@ -1,0 +1,26 @@
+logging:
+  pattern:
+    dateformat: HH:mm:ss:SSS
+  level:
+    cn.itcast: debug
+spring:
+  rabbitmq:
+    host: 192.168.11.128 # rabbitMQ的ip地址
+    port: 5672 # 端口
+    username: itcast
+    password: 123321
+    virtual-host: /
+    listener:
+      simple:
+        prefetch: 1
+#        acknowledge-mode: none # 关闭ack
+#        acknowledge-mode: manual # 手动确认ack 必须调用api确认 不会丢失消息 比较麻烦
+        acknowledge-mode: auto # 类似事务机制，出现异常时返回nack，消息回滚到mq；没有异常，返回ack
+        default-requeue-rejected: false # 消息拒绝后是否重新入队
+        # 重试机制
+        retry:
+          enabled: true
+          initial-interval: 1000ms # 初始化间隔时间
+          max-attempts: 3 # 最大重试次数
+          multiplier: 1 # 重试间隔时间的倍数
+          stateless: true # 消费方法中有事务就不能设置为true
